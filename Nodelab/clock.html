@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
+
+    <title>Clock</title>
+    <style>
+        .clock{
+            width: 300px;  
+            height: 300px;
+            background: gray;
+            border-radius: 50%;
+            margin: 8% auto;
+            border: 10px solid gold;
+            position: relative;
+            box-shadow: 0 2vw 4vw -1vw rgba(0, 0, 0, 0.8);
+        }
+        .dot{
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: black;
+            position: absolute ;
+            left: 50%; 
+            top: 143px;
+            margin-left: -7px;
+            z-index: 10;
+
+        }
+        .hour-hand{
+            width: 60px;
+            height: 10px;
+            background-color: blue;
+            margin-top: 145px;
+            margin-left: 150px;
+            position: absolute;
+            border-top-right-radius: 50%;
+            border-bottom-right-radius: 50%;
+            z-index: 4;
+        }
+        .dial-line{
+            width: 2px;
+            height: 15px;
+            background-color: aquamarine;
+            left: 50%;
+            margin-left: -1px;
+            position: absolute;
+            transform-origin: 50% 150px; 
+        }
+        .special-dial-line{
+            width: 4px;
+            height: 25px;
+            margin-left: -2px;
+        }
+        .minute-hand{
+            width: 90px;
+            height: 8px;
+            background-color: rgb(18, 32, 44);
+            margin-left: 85px;
+            margin-top: 160px;
+            position: absolute;
+            border-top-right-radius: 50%;
+            border-bottom-right-radius: 50%;
+            z-index: 6;
+            transform-origin: 50% 50px; 
+            transform: rotate(60deg);
+
+
+        }
+        .second-hand{
+            width: 120px;
+            height: 5px;
+            background-color: rgb(61, 119, 80);
+            margin-left: 60px;
+            margin-top: 28px;
+            position: absolute;
+            border-top-right-radius: 50%;
+            border-bottom-right-radius: 50%;
+            z-index: 4;
+            transform-origin: 50% 50px; 
+            transform: rotate(210deg);
+        }
+        span {
+            position: absolute;
+            font-weight: 700;
+            font-family: 'Poiret One', cursive;
+            font-size: 24px;
+            display: inline-block;
+        }
+
+        .h12 {
+            left: 50%;
+            margin-left: -10px;
+            top: 30px;
+        }
+        .h3 {
+            left: 75%;
+            margin-left: 28px;
+            top: 135px;
+        }
+        .h6 {
+            left: 50%;
+            margin-left: -8px;
+            top: 245px;
+        }
+        .h9{
+            left: 25%;
+            margin-left: -40px;
+            top: 135px;
+        }
+        .info {
+            width: 120px;
+            height: 28px;
+            font-family: 'Poiret One';
+            font-weight:700;
+            font-size: 11px;
+            text-align: center;
+            line-height: 28px;
+            position: absolute;
+            background: #666;
+            border-radius: 7px;
+            letter-spacing: 3px;
+            left: 50%;
+            margin-left: -60px;
+            z-index: 1;
+
+        }
+        .day {
+            top : 80px;
+        }
+        .weekday {
+            bottom : 80px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bae</h1>
+    <div class="clock">
+        <div class="dot"></div>
+        <div class="hour-hand"></div>
+        <div class="minute-hand"></div>
+        <div class="second-hand"></div>
+        <span class="h12">12</span>
+        <span class="h3">3</span>
+        <span class="h6">6</span>
+        <span class="h9">9</span>
+        <div class="info day">8/12/1980</div>
+        <div class="info weekday">Thursday</div>
+
+    </div>
+    <script type="text/javascript">
+        var clockEl = document.getElementsByClassName("clock")[0];
+
+        clockEl.innerHTML += '<div class="special-dial-line dial-line"></div>'+
+        [...Array(59)].map((_,i)=>{
+                if( (i+1)%5 ==0 ){
+                    return'<div class="special-dial-line dial-line" style="transform: rotate('+ (i+1)*6 + 'deg);"></div>';
+
+                }
+                else {
+            return'<div class="dial-line" style="transform: rotate('+ (i+1)*6 + 'deg);"></div>';
+                }
+        }).join('');  //destructing//
+
+        // hàm ngày tháng 
+        function getDateTimesAttributes() {
+            const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] ;
+            var d = new Date();
+
+            var month = d.getMonth();
+            var date = d.getDate();
+            var year = d.getFullYear();
+            var h = d.getHours();
+            var m = d.getMinutes();
+            var s = d.getSeconds();
+            
+            var hdeg = h*30 + m*0.5;
+            var mheg = m*6 + s*0.1;
+            var sdeg = s*6;
+            var localDate = normalize(date) + '/' + normalize(month) + '/' + year;
+            return {
+                'hdeg' : hdeg,
+                'mdeg' : mdeg,
+                'sdeg' : sdeg,
+                'localDate' : localDate,
+                'weekDay' : weekDays[d.getDay()]
+            }
+        }
+        function normalize(n)  {
+            return n<10? '0' + n : n;
+        
+        }
+        function uiUpdate() {
+            var d = getDateTimesAttributes();
+            document.getElementsByClassName("hour-hand")[0].style.transform
+        }
+    </script>
+</body>
+</html>
