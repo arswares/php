@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
+    <title>Clock</title>
+    <style>
+        .clock {
+            width: 300px;
+            height: 300px;
+            background: #ececec;
+            margin: 8% auto;
+            border-radius: 50%;
+            border: 14px solid #333;
+            position: relative;
+            box-shadow: 0 2vw 4vw -1vw rgba(0, 0, 0, 0.8);
+        }
+        
+        .dot {
+            width: 14px;
+            height: 14px;
+            background: #666;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 143px;
+            margin-left: -7px;
+            z-index: 10;
+        }
+        
+        .dial-line {
+            width: 2px;
+            height: 15px;
+            background: grey;
+            position: absolute;
+            left: 50%;
+            margin-left: -1px;
+            transform-origin: 50% 150px;
+        }
+        
+        .special-dial-line {
+            width: 4px;
+            height: 25px;
+            margin-left: -2px;
+        }
+        /* kim gio */
+        
+        .hour-hand {
+            width: 5px;
+            height: 65px;
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+            background: black;
+            position: absolute;
+            left: 50%;
+            margin-left: -3px;
+            top: 85px;
+            z-index: 4;
+            transform-origin: 50% 65px;
+        }
+        /* kim phut */
+        
+        .minute-hand {
+            width: 4px;
+            height: 100px;
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+            background: black;
+            position: absolute;
+            left: 50%;
+            margin-left: -2px;
+            top: 50px;
+            z-index: 5;
+            transform-origin: 50% 100px;
+        }
+        /* kim giay */
+        
+        .second-hand {
+            width: 2px;
+            height: 125px;
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+            background: black;
+            position: absolute;
+            left: 50%;
+            margin-left: -1px;
+            top: 25px;
+            z-index: 6;
+            transform-origin: 50% 125px;
+        }
+        
+        span {
+            position: absolute;
+            font-weight: 700;
+            font-size: 24px;
+            font-family: 'Poiret One', cursive;
+            display: inline-block;
+        }
+        
+        .h12 {
+            left: 50%;
+            /* Cach le ben trai*/
+            margin-left: -10px;
+            top: 30px;
+        }
+        
+        .h3 {
+            left: 100%;
+            margin-left: -45px;
+            top: 45%;
+        }
+        
+        .h6 {
+            left: 50%;
+            margin-left: -8px;
+            top: 80%;
+        }
+        
+        .h9 {
+            margin-left: 35px;
+            top: 45%;
+        }
+        
+        .info {
+            width: 120px;
+            height: 20px;
+            font-family: 'Poiret One';
+            font-weight: 700;
+            text-align: center;
+            line-height: 20px;
+            position: absolute;
+            background: #666;
+            border-radius: 7px;
+            /*khoang cach giua cac ky tu*/
+            letter-spacing: 2px;
+            left: 50%;
+            margin-left: -60px;
+            z-index: 1;
+        }
+        
+        .day {
+            top: 80px;
+        }
+        
+        .weekday {
+            bottom: 80px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="clock">
+        <div class="dot"></div>
+        <div class="hour-hand"></div>
+        <div class="minute-hand"></div>
+        <div class="second-hand"></div>
+        <span class="h12">12</span>
+        <span class="h3">3</span>
+        <span class="h6">6</span>
+        <span class="h9">9</span>
+        <div class="info day">08/12/1980</div>
+        <div class="info weekday">Thursday</div>
+    </div>
+    <script type="text/javascript">
+        var clockEl = document.getElementsByClassName("clock")[0];
+
+        clockEl.innerHTML += '<div class="dial-line special-dial-line"></div>' + [...Array(59)].map((_, i) => {
+            if ((i + 1) % 5 == 0) {
+                return '<div class="dial-line special-dial-line" style="transform: rotate(' + (i + 1) * 6 + 'deg);"></div>';
+            } else {
+                return '<div class="dial-line" style="transform: rotate(' + (i + 1) * 6 + 'deg);"></div>';
+            }
+        }).join('');
+
+        function getDateTimeAttributes() {
+            const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+            var d = new Date();
+
+            var month = d.getMonth();
+            var date = d.getDate();
+            var year = d.getFullYear();
+            var h = d.getHours();
+            var m = d.getMinutes();
+            var s = d.getSeconds();
+            var hdeg = h * 30 + m * 0.5;
+            var mdeg = m * 6 + s * 0.1;
+            var sdeg = s * 6;
+            var localDate = normalize(date) + '/' + normalize(month) + '/' + year;
+
+            return {
+                'hdeg': hdeg,
+                'mdeg': mdeg,
+                'sdeg': sdeg,
+                'localDate': localDate,
+                'weekDay': weekDays[d.getDay()]
+            }
+        }
+
+        function normalize(n) {
+            return n < 10 ? '0' + n : n;
+        }
+
+        function uiUpdate() {
+            var d = getDateTimeAttributes();
+
+            document.getElementsByClassName("hour-hand")[0].style.transform = 'rotate(' + d.hdeg + 'deg)';
+            document.getElementsByClassName("minute-hand")[0].style.transform = 'rotate(' + d.mdeg + 'deg)';
+            document.getElementsByClassName("second-hand")[0].style.transform = 'rotate(' + d.sdeg + 'deg)';
+
+            document.getElementsByClassName('day')[0].innerHTML = d.localDate;
+            document.getElementsByClassName('weekday')[0].innerHTML = d.weekDay;
+        }
+
+        setInterval(uiUpdate, 1000);
+    </script>
+</body>
+
+</html>
